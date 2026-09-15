@@ -16,10 +16,11 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: #121417; 
+      background-color: #0f1115; /* Sedikit lebih gelap agar kontras cahaya lebih bagus */
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
       user-select: none;
+      transition: background-color 0.8s ease;
     }
 
     .bg-glow {
@@ -28,10 +29,11 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 50% 50%, rgba(255, 230, 100, 0.15) 0%, transparent 70%);
+      background: radial-gradient(circle at 50% 40%, rgba(255, 210, 70, 0.25) 0%, transparent 70%);
       opacity: 0; 
       z-index: 0;
       pointer-events: none;
+      transition: opacity 0.8s ease;
     }
 
     h1 {
@@ -42,6 +44,7 @@
       z-index: 1;
       text-align: center;
       padding: 0 20px;
+      transition: color 0.6s ease;
     }
 
     .main-container {
@@ -51,7 +54,7 @@
       z-index: 1;
     }
 
-    /* 2. LAMPU */
+    /* 2. LAMPU & EFEK CAHAYA */
     .lamp-wrapper {
       position: relative;
       display: flex;
@@ -65,14 +68,28 @@
       background: #e0e0e0;
       border-radius: 70px 70px 0 0;
       position: relative;
-      z-index: 2;
+      z-index: 3; /* Lebih tinggi dari bola lampu */
       transition: all 0.5s ease;
+    }
+
+    .lamp-bulb {
+      position: absolute;
+      top: 45px; /* Mengintip sedikit dari bawah kap */
+      width: 40px;
+      height: 40px;
+      background: #ffffff;
+      border-radius: 50%;
+      z-index: 2;
+      opacity: 0;
+      box-shadow: 0 0 40px #ffdd00, 0 0 80px #ffaa00;
+      transition: opacity 0.6s ease;
     }
 
     .lamp-stand {
       width: 12px;
       height: 120px;
       background: #cccccc;
+      z-index: 1;
     }
 
     .lamp-base {
@@ -80,44 +97,48 @@
       height: 10px;
       background: #cccccc;
       border-radius: 5px;
+      z-index: 1;
     }
 
     .lamp-light {
       position: absolute;
-      top: 60px;
-      width: 250px;
-      height: 350px;
-      background: linear-gradient(to bottom, rgba(255, 235, 130, 0.4), transparent);
-      clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+      top: 55px;
+      width: 300px;
+      height: 400px;
+      background: linear-gradient(to bottom, rgba(255, 235, 120, 0.6) 0%, rgba(255, 220, 80, 0.1) 60%, transparent 100%);
+      clip-path: polygon(35% 0, 65% 0, 100% 100%, 0 100%);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.6s ease;
+      z-index: 4;
     }
 
-    /* 3. TALI PENARIK */
+    /* 3. TALI PENARIK YANG DIPERBAIKI */
     .pull-string-container {
       position: absolute;
       top: 60px;
-      left: 70%;
+      left: 75%; /* Sedikit digeser agar tidak menabrak tiang lampu */
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 3;
+      z-index: 5;
     }
 
     .pull-string {
-      width: 2px;
+      width: 3px; /* Sedikit ditebalkan */
       height: 60px; 
       background: #888;
+      transform-origin: top; /* Agar memanjangnya dari atas ke bawah */
     }
 
     .pull-handle {
-      width: 20px; /* Sedikit diperbesar agar lebih mudah ditarik di layar sentuh HP */
-      height: 20px;
-      background: #d4af37; 
+      width: 22px; 
+      height: 22px;
+      background: linear-gradient(135deg, #fcecae, #d4af37); /* Efek 3D pada bola emas */
       border-radius: 50%;
       cursor: grab;
       touch-action: none; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
     
     .pull-handle:active {
@@ -142,77 +163,62 @@
     }
 
     .fact-box h2 {
-      color: #d4af37;
+      color: #ffd700;
       margin-top: 0;
       margin-bottom: 20px;
       font-weight: 500;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
     }
 
     .fact-box p {
       color: white;
       font-size: 16px;
-      line-height: 1.5;
+      line-height: 1.6;
       margin: 0;
     }
 
     /* 5. KELAS 'ACTIVE' KETIKA MENYALA */
-    .lamp-wrapper.on .lamp-light {
-      opacity: 1; 
-    }
+    .lamp-wrapper.on .lamp-light { opacity: 1; }
+    .lamp-wrapper.on .lamp-bulb { opacity: 1; }
     .lamp-wrapper.on .lamp-shade {
-      background: #fff9d6; 
-      box-shadow: 0 -10px 40px rgba(255, 235, 130, 0.5);
+      background: #fffdf2; 
+      box-shadow: 0 -10px 50px rgba(255, 230, 100, 0.5), inset 0 -5px 15px rgba(255, 210, 50, 0.7);
     }
     .fact-box.active {
       opacity: 1; 
       transform: translateY(0);
     }
 
-    /* 6. RESPONSIVE UNTUK HP (MEDIA QUERY) */
+    /* 6. RESPONSIVE UNTUK HP */
     @media (max-width: 768px) {
-      h1 {
-        font-size: 22px;
-        margin-bottom: 30px;
-      }
-      
-      .main-container {
-        flex-direction: column; /* Mengubah layout menjadi vertikal (atas-bawah) */
-        gap: 30px; /* Mengurangi jarak antar elemen */
-      }
-
-      .fact-box {
-        width: 85%; /* Menyesuaikan lebar kotak fakta di HP */
-        max-width: 300px;
-        padding: 25px 20px;
-      }
-
-      .lamp-light {
-        height: 250px; /* Cahaya lampu sedikit dipendekkan di HP agar tidak menutupi teks */
-      }
+      h1 { font-size: 22px; margin-bottom: 30px; }
+      .main-container { flex-direction: column; gap: 40px; }
+      .fact-box { width: 85%; max-width: 300px; padding: 25px 20px; }
+      .lamp-light { height: 280px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Pendaran Latar Belakang -->
   <div class="bg-glow" id="bgGlow"></div>
 
-  <h1>Nyalakan Lampu Untuk Mengetahui Fakta</h1>
+  <h1 id="titleText">Nyalakan Lampu Untuk Mengetahui Fakta</h1>
 
   <div class="main-container">
     <div class="lamp-wrapper" id="lampWrapper">
       <div class="lamp-shade"></div>
+      <div class="lamp-bulb"></div> <!-- Bola lampu baru yang akan menyala -->
       <div class="lamp-light"></div>
       <div class="lamp-stand"></div>
       <div class="lamp-base"></div>
       
+      <!-- Container tali & bola sudah diperbaiki -->
       <div class="pull-string-container">
         <div class="pull-string" id="pullString"></div>
         <div class="pull-handle" id="pullHandle"></div>
       </div>
     </div>
 
-    <!-- Kotak Fakta Acak -->
     <div class="fact-box" id="factBox">
       <h2>Tahukah Kamu?</h2>
       <p id="factText">Tarik tali untuk melihat fakta!</p>
@@ -227,13 +233,14 @@
     const lampWrapper = document.getElementById("lampWrapper");
     const bgGlow = document.getElementById("bgGlow");
     const body = document.body;
+    const titleText = document.getElementById("titleText");
 
     let isOn = false; 
     let isDragging = false;
     let startY = 0;
-    const maxPull = 50; 
+    const maxPull = 60; // Batas tarikan maksimal
+    let hasToggled = false; // Mencegah lampu nyala-mati berulang kali saat ditarik
 
-    // Daftar Kata/Fakta Acak
     const daftarFakta = [
       "Madu tidak pernah basi. Para arkeolog menemukan pot madu di makam Mesir kuno yang berumur lebih dari 3.000 tahun dan masih bisa dimakan.",
       "Jantung udang terletak di kepalanya.",
@@ -256,6 +263,7 @@
 
     function dragStart(e) {
       isDragging = true;
+      hasToggled = false; // Reset status saat mulai menarik
       startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
       body.style.cursor = "grabbing"; 
     }
@@ -266,9 +274,17 @@
       let currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
       let tarikJarak = currentY - startY;
 
-      if (tarikJarak > 0 && tarikJarak <= maxPull) {
-        handle.style.transform = `translateY(${tarikJarak}px)`;
-        pullString.style.height = `${60 + tarikJarak}px`; 
+      // Batasi agar tidak bisa ditarik tembus ke bawah atau didorong ke atas
+      if (tarikJarak < 0) tarikJarak = 0;
+      if (tarikJarak > maxPull) tarikJarak = maxPull;
+
+      // Hanya mengubah tinggi tali. Bola otomatis terdorong ke bawah.
+      pullString.style.height = `${60 + tarikJarak}px`; 
+
+      // Nyalakan lampu persis ketika tali ditarik cukup dalam (mirip sakelar mekanik)
+      if (tarikJarak > (maxPull * 0.75) && !hasToggled) {
+        toggleLight();
+        hasToggled = true; // Kunci agar tidak tereksekusi berkali-kali
       }
     }
 
@@ -277,15 +293,8 @@
       isDragging = false;
       body.style.cursor = "default";
 
-      let currentY = e.type.includes('mouse') ? e.clientY : (e.changedTouches ? e.changedTouches[0].clientY : startY);
-      let tarikJarak = currentY - startY;
-
-      if (tarikJarak > (maxPull / 2)) {
-        toggleLight();
-      }
-
-      gsap.to(handle, { y: 0, duration: 0.6, ease: "elastic.out(1, 0.4)" });
-      gsap.to(pullString, { height: 60, duration: 0.6, ease: "elastic.out(1, 0.4)" });
+      // Animasi kembalinya tali dibuat sangat liquid/membal
+      gsap.to(pullString, { height: 60, duration: 1.2, ease: "elastic.out(1, 0.2)" });
     }
 
     function toggleLight() {
@@ -298,14 +307,16 @@
         factBox.classList.add("active");
         lampWrapper.classList.add("on"); 
         
-        gsap.to(body, { backgroundColor: "#1c1f24", duration: 0.6 });
-        gsap.to(bgGlow, { opacity: 1, duration: 0.6 }); 
+        body.style.backgroundColor = "#1a1d24";
+        bgGlow.style.opacity = "1";
+        titleText.style.color = "#fff";
       } else {
         factBox.classList.remove("active");
         lampWrapper.classList.remove("on"); 
         
-        gsap.to(body, { backgroundColor: "#121417", duration: 0.6 });
-        gsap.to(bgGlow, { opacity: 0, duration: 0.6 }); 
+        body.style.backgroundColor = "#0f1115";
+        bgGlow.style.opacity = "0";
+        titleText.style.color = "#aaa"; // Redupkan judul saat lampu mati
       }
     }
   </script>
