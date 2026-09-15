@@ -1,231 +1,231 @@
-!DOCTYPE html
-html lang=id
-head
-  meta charset=UTF-8
-  meta name=viewport content=width=device-width, initial-scale=1.0
-  titleTarik Tali Lampu - Fakta Acaktitle
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarik Tali Lampu - Fakta Acak</title>
   
-  script src=httpscdnjs.cloudflare.comajaxlibsgsap3.12.2gsap.min.jsscript
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-  style
-     1. PENGATURAN DASAR 
+  <style>
+    /* 1. PENGATURAN DASAR */
     body {
-      margin 0;
-      height 100vh;
-      display flex;
-      flex-direction column;
-      justify-content center;
-      align-items center;
-      background-color #121417; 
-      font-family 'Segoe UI', sans-serif;
-      overflow hidden;
-      user-select none;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #121417; 
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      user-select: none;
     }
 
     .bg-glow {
-      position absolute;
-      top 0;
-      left 0;
-      width 100%;
-      height 100%;
-      background radial-gradient(circle at 50% 50%, rgba(255, 230, 100, 0.15) 0%, transparent 70%);
-      opacity 0; 
-      z-index 0;
-      pointer-events none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 230, 100, 0.15) 0%, transparent 70%);
+      opacity: 0; 
+      z-index: 0;
+      pointer-events: none;
     }
 
     h1 {
-      color white;
-      margin-bottom 50px;
-      font-weight 400;
-      letter-spacing 1px;
-      z-index 1;
-      text-align center;
-      padding 0 20px;
+      color: white;
+      margin-bottom: 50px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      z-index: 1;
+      text-align: center;
+      padding: 0 20px;
     }
 
     .main-container {
-      display flex;
-      align-items center;
-      gap 80px; 
-      z-index 1;
+      display: flex;
+      align-items: center;
+      gap: 80px; 
+      z-index: 1;
     }
 
-     2. LAMPU 
+    /* 2. LAMPU */
     .lamp-wrapper {
-      position relative;
-      display flex;
-      flex-direction column;
-      align-items center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .lamp-shade {
-      width 140px;
-      height 60px;
-      background #e0e0e0;
-      border-radius 70px 70px 0 0;
-      position relative;
-      z-index 2;
-      transition all 0.5s ease;
+      width: 140px;
+      height: 60px;
+      background: #e0e0e0;
+      border-radius: 70px 70px 0 0;
+      position: relative;
+      z-index: 2;
+      transition: all 0.5s ease;
     }
 
     .lamp-stand {
-      width 12px;
-      height 120px;
-      background #cccccc;
+      width: 12px;
+      height: 120px;
+      background: #cccccc;
     }
 
     .lamp-base {
-      width 80px;
-      height 10px;
-      background #cccccc;
-      border-radius 5px;
+      width: 80px;
+      height: 10px;
+      background: #cccccc;
+      border-radius: 5px;
     }
 
     .lamp-light {
-      position absolute;
-      top 60px;
-      width 250px;
-      height 350px;
-      background linear-gradient(to bottom, rgba(255, 235, 130, 0.4), transparent);
-      clip-path polygon(30% 0, 70% 0, 100% 100%, 0 100%);
-      opacity 0;
-      pointer-events none;
-      transition opacity 0.6s ease;
+      position: absolute;
+      top: 60px;
+      width: 250px;
+      height: 350px;
+      background: linear-gradient(to bottom, rgba(255, 235, 130, 0.4), transparent);
+      clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
     }
 
-     3. TALI PENARIK 
+    /* 3. TALI PENARIK */
     .pull-string-container {
-      position absolute;
-      top 60px;
-      left 70%;
-      display flex;
-      flex-direction column;
-      align-items center;
-      z-index 3;
+      position: absolute;
+      top: 60px;
+      left: 70%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 3;
     }
 
     .pull-string {
-      width 2px;
-      height 60px; 
-      background #888;
+      width: 2px;
+      height: 60px; 
+      background: #888;
     }
 
     .pull-handle {
-      width 20px;  Sedikit diperbesar agar lebih mudah ditarik di layar sentuh HP 
-      height 20px;
-      background #d4af37; 
-      border-radius 50%;
-      cursor grab;
-      touch-action none; 
+      width: 20px; /* Sedikit diperbesar agar lebih mudah ditarik di layar sentuh HP */
+      height: 20px;
+      background: #d4af37; 
+      border-radius: 50%;
+      cursor: grab;
+      touch-action: none; 
     }
     
-    .pull-handleactive {
-      cursor grabbing;
+    .pull-handle:active {
+      cursor: grabbing;
     }
 
-     4. KOTAK FAKTA 
+    /* 4. KOTAK FAKTA */
     .fact-box {
-      background rgba(255, 255, 255, 0.03);
-      backdrop-filter blur(15px);
-      border 1px solid rgba(255, 255, 255, 0.1);
-      padding 40px 30px;
-      border-radius 20px;
-      width 260px;
-      box-shadow 0 15px 35px rgba(0,0,0,0.2);
-      text-align center;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 40px 30px;
+      border-radius: 20px;
+      width: 260px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      text-align: center;
       
-      opacity 0;
-      transform translateY(30px);
-      pointer-events none; 
-      transition all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0;
+      transform: translateY(30px);
+      pointer-events: none; 
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .fact-box h2 {
-      color #d4af37;
-      margin-top 0;
-      margin-bottom 20px;
-      font-weight 500;
+      color: #d4af37;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 500;
     }
 
     .fact-box p {
-      color white;
-      font-size 16px;
-      line-height 1.5;
-      margin 0;
+      color: white;
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 0;
     }
 
-     5. KELAS 'ACTIVE' KETIKA MENYALA 
+    /* 5. KELAS 'ACTIVE' KETIKA MENYALA */
     .lamp-wrapper.on .lamp-light {
-      opacity 1; 
+      opacity: 1; 
     }
     .lamp-wrapper.on .lamp-shade {
-      background #fff9d6; 
-      box-shadow 0 -10px 40px rgba(255, 235, 130, 0.5);
+      background: #fff9d6; 
+      box-shadow: 0 -10px 40px rgba(255, 235, 130, 0.5);
     }
     .fact-box.active {
-      opacity 1; 
-      transform translateY(0);
+      opacity: 1; 
+      transform: translateY(0);
     }
 
-     6. RESPONSIVE UNTUK HP (MEDIA QUERY) 
-    @media (max-width 768px) {
+    /* 6. RESPONSIVE UNTUK HP (MEDIA QUERY) */
+    @media (max-width: 768px) {
       h1 {
-        font-size 22px;
-        margin-bottom 30px;
+        font-size: 22px;
+        margin-bottom: 30px;
       }
       
       .main-container {
-        flex-direction column;  Mengubah layout menjadi vertikal (atas-bawah) 
-        gap 30px;  Mengurangi jarak antar elemen 
+        flex-direction: column; /* Mengubah layout menjadi vertikal (atas-bawah) */
+        gap: 30px; /* Mengurangi jarak antar elemen */
       }
 
       .fact-box {
-        width 85%;  Menyesuaikan lebar kotak fakta di HP 
-        max-width 300px;
-        padding 25px 20px;
+        width: 85%; /* Menyesuaikan lebar kotak fakta di HP */
+        max-width: 300px;
+        padding: 25px 20px;
       }
 
       .lamp-light {
-        height 250px;  Cahaya lampu sedikit dipendekkan di HP agar tidak menutupi teks 
+        height: 250px; /* Cahaya lampu sedikit dipendekkan di HP agar tidak menutupi teks */
       }
     }
-  style
-head
-body
+  </style>
+</head>
+<body>
 
-  !-- Pendaran Latar Belakang --
-  div class=bg-glow id=bgGlowdiv
+  <!-- Pendaran Latar Belakang -->
+  <div class="bg-glow" id="bgGlow"></div>
 
-  h1Nyalakan Lampu Untuk Mengetahui Faktah1
+  <h1>Nyalakan Lampu Untuk Mengetahui Fakta</h1>
 
-  div class=main-container
-    div class=lamp-wrapper id=lampWrapper
-      div class=lamp-shadediv
-      div class=lamp-lightdiv
-      div class=lamp-standdiv
-      div class=lamp-basediv
+  <div class="main-container">
+    <div class="lamp-wrapper" id="lampWrapper">
+      <div class="lamp-shade"></div>
+      <div class="lamp-light"></div>
+      <div class="lamp-stand"></div>
+      <div class="lamp-base"></div>
       
-      div class=pull-string-container
-        div class=pull-string id=pullStringdiv
-        div class=pull-handle id=pullHandlediv
-      div
-    div
+      <div class="pull-string-container">
+        <div class="pull-string" id="pullString"></div>
+        <div class="pull-handle" id="pullHandle"></div>
+      </div>
+    </div>
 
-    !-- Kotak Fakta Acak --
-    div class=fact-box id=factBox
-      h2Tahukah Kamuh2
-      p id=factTextTarik tali untuk melihat fakta!p
-    div
-  div
+    <!-- Kotak Fakta Acak -->
+    <div class="fact-box" id="factBox">
+      <h2>Tahukah Kamu?</h2>
+      <p id="factText">Tarik tali untuk melihat fakta!</p>
+    </div>
+  </div>
 
-  script
-    const handle = document.getElementById(pullHandle);
-    const pullString = document.getElementById(pullString); 
-    const factBox = document.getElementById(factBox);
-    const factText = document.getElementById(factText); 
-    const lampWrapper = document.getElementById(lampWrapper);
-    const bgGlow = document.getElementById(bgGlow);
+  <script>
+    const handle = document.getElementById("pullHandle");
+    const pullString = document.getElementById("pullString"); 
+    const factBox = document.getElementById("factBox");
+    const factText = document.getElementById("factText"); 
+    const lampWrapper = document.getElementById("lampWrapper");
+    const bgGlow = document.getElementById("bgGlow");
     const body = document.body;
 
     let isOn = false; 
@@ -233,40 +233,40 @@ body
     let startY = 0;
     const maxPull = 50; 
 
-     Daftar KataFakta Acak
+    // Daftar Kata/Fakta Acak
     const daftarFakta = [
-      Madu tidak pernah basi. Para arkeolog menemukan pot madu di makam Mesir kuno yang berumur lebih dari 3.000 tahun dan masih bisa dimakan.,
-      Jantung udang terletak di kepalanya.,
-      Siput bisa tidur selama tiga tahun tanpa henti.,
-      Sidik jari koala sangat mirip dengan manusia, bahkan bisa membingungkan penyidik di tempat kejadian perkara.,
-      Gurita memiliki tiga jantung, sembilan otak, dan darah berwarna biru.,
-      Pisang sebenarnya adalah buah beri, tetapi stroberi bukan.,
-      Kutu bisa melompat hingga 200 kali panjang tubuhnya. Setara dengan manusia yang melompat setinggi gedung Empire State.,
-      Air di bumi usianya jauh lebih tua daripada matahari kita.
+      "Madu tidak pernah basi. Para arkeolog menemukan pot madu di makam Mesir kuno yang berumur lebih dari 3.000 tahun dan masih bisa dimakan.",
+      "Jantung udang terletak di kepalanya.",
+      "Siput bisa tidur selama tiga tahun tanpa henti.",
+      "Sidik jari koala sangat mirip dengan manusia, bahkan bisa membingungkan penyidik di tempat kejadian perkara.",
+      "Gurita memiliki tiga jantung, sembilan otak, dan darah berwarna biru.",
+      "Pisang sebenarnya adalah buah beri, tetapi stroberi bukan.",
+      "Kutu bisa melompat hingga 200 kali panjang tubuhnya. Setara dengan manusia yang melompat setinggi gedung Empire State.",
+      "Air di bumi usianya jauh lebih tua daripada matahari kita."
     ];
 
-    handle.addEventListener(mousedown, dragStart);
-    handle.addEventListener(touchstart, dragStart, { passive false });
+    handle.addEventListener("mousedown", dragStart);
+    handle.addEventListener("touchstart", dragStart, { passive: false });
 
-    window.addEventListener(mousemove, drag);
-    window.addEventListener(touchmove, drag, { passive false });
+    window.addEventListener("mousemove", drag);
+    window.addEventListener("touchmove", drag, { passive: false });
 
-    window.addEventListener(mouseup, dragEnd);
-    window.addEventListener(touchend, dragEnd);
+    window.addEventListener("mouseup", dragEnd);
+    window.addEventListener("touchend", dragEnd);
 
     function dragStart(e) {
       isDragging = true;
-      startY = e.type.includes('mouse')  e.clientY  e.touches[0].clientY;
-      body.style.cursor = grabbing; 
+      startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+      body.style.cursor = "grabbing"; 
     }
 
     function drag(e) {
       if (!isDragging) return;
       
-      let currentY = e.type.includes('mouse')  e.clientY  e.touches[0].clientY;
+      let currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
       let tarikJarak = currentY - startY;
 
-      if (tarikJarak  0 && tarikJarak = maxPull) {
+      if (tarikJarak > 0 && tarikJarak <= maxPull) {
         handle.style.transform = `translateY(${tarikJarak}px)`;
         pullString.style.height = `${60 + tarikJarak}px`; 
       }
@@ -275,40 +275,40 @@ body
     function dragEnd(e) {
       if (!isDragging) return;
       isDragging = false;
-      body.style.cursor = default;
+      body.style.cursor = "default";
 
-      let currentY = e.type.includes('mouse')  e.clientY  (e.changedTouches  e.changedTouches[0].clientY  startY);
+      let currentY = e.type.includes('mouse') ? e.clientY : (e.changedTouches ? e.changedTouches[0].clientY : startY);
       let tarikJarak = currentY - startY;
 
-      if (tarikJarak  (maxPull  2)) {
+      if (tarikJarak > (maxPull / 2)) {
         toggleLight();
       }
 
-      gsap.to(handle, { y 0, duration 0.6, ease elastic.out(1, 0.4) });
-      gsap.to(pullString, { height 60, duration 0.6, ease elastic.out(1, 0.4) });
+      gsap.to(handle, { y: 0, duration: 0.6, ease: "elastic.out(1, 0.4)" });
+      gsap.to(pullString, { height: 60, duration: 0.6, ease: "elastic.out(1, 0.4)" });
     }
 
     function toggleLight() {
       isOn = !isOn; 
 
       if (isOn) {
-        const faktaAcak = daftarFakta[Math.floor(Math.random()  daftarFakta.length)];
+        const faktaAcak = daftarFakta[Math.floor(Math.random() * daftarFakta.length)];
         factText.textContent = faktaAcak; 
 
-        factBox.classList.add(active);
-        lampWrapper.classList.add(on); 
+        factBox.classList.add("active");
+        lampWrapper.classList.add("on"); 
         
-        gsap.to(body, { backgroundColor #1c1f24, duration 0.6 });
-        gsap.to(bgGlow, { opacity 1, duration 0.6 }); 
+        gsap.to(body, { backgroundColor: "#1c1f24", duration: 0.6 });
+        gsap.to(bgGlow, { opacity: 1, duration: 0.6 }); 
       } else {
-        factBox.classList.remove(active);
-        lampWrapper.classList.remove(on); 
+        factBox.classList.remove("active");
+        lampWrapper.classList.remove("on"); 
         
-        gsap.to(body, { backgroundColor #121417, duration 0.6 });
-        gsap.to(bgGlow, { opacity 0, duration 0.6 }); 
+        gsap.to(body, { backgroundColor: "#121417", duration: 0.6 });
+        gsap.to(bgGlow, { opacity: 0, duration: 0.6 }); 
       }
     }
-  script
+  </script>
 
-body
-html
+</body>
+</html>
