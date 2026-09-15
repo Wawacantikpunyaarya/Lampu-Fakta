@@ -237,22 +237,28 @@
     // MEMBUAT OBJEK AUDIO (Suara klik sakelar)
     const clickSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
 
+    // ... [Kode sebelumnya tetap sama]
     let isOn = false; 
     let isDragging = false;
     let startY = 0;
     const maxPull = 60; 
     let hasToggled = false; 
 
-    const daftarFakta = [
-      "Madu tidak pernah basi. Para arkeolog menemukan pot madu di makam Mesir kuno yang berumur lebih dari 3.000 tahun dan masih bisa dimakan.",
-      "Jantung udang terletak di kepalanya.",
-      "Siput bisa tidur selama tiga tahun tanpa henti.",
-      "Sidik jari koala sangat mirip dengan manusia, bahkan bisa membingungkan penyidik di tempat kejadian perkara.",
-      "Gurita memiliki tiga jantung, sembilan otak, dan darah berwarna biru.",
-      "Pisang sebenarnya adalah buah beri, tetapi stroberi bukan.",
-      "Kutu bisa melompat hingga 200 kali panjang tubuhnya. Setara dengan manusia yang melompat setinggi gedung Empire State.",
-      "Air di bumi usianya jauh lebih tua daripada matahari kita."
-    ];
+    // 1. Ubah daftarFakta menjadi array kosong atau teks loading
+    let daftarFakta = ["Sedang mengambil fakta dari satelit... Tarik lagi sebentar ya!"];
+
+    // 2. Ganti URL di bawah ini dengan URL Web App dari langkah ke-2
+    const urlDatabase = "https://script.google.com/macros/s/AKfycbw8dL6QoG0X_ZAZtlnbs6DptV1Z5lbIkZBvFffz3-d3K4YYEvEGRdfamhpvicPwqWL7/exec";
+
+    // 3. Mengambil data dari Google Sheets
+    fetch(urlDatabase)
+      .then(response => response.json())
+      .then(data => {
+        if (data.length > 0) {
+          daftarFakta = data; // Mengganti teks loading dengan 100 fakta dari spreadsheet
+        }
+      })
+      .catch(error => console.error("Gagal mengambil data:", error));
 
     handle.addEventListener("mousedown", dragStart);
     handle.addEventListener("touchstart", dragStart, { passive: false });
