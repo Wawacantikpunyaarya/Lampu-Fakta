@@ -16,7 +16,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: #0f1115; /* Sedikit lebih gelap agar kontras cahaya lebih bagus */
+      background-color: #0f1115; 
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
       user-select: none;
@@ -68,13 +68,13 @@
       background: #e0e0e0;
       border-radius: 70px 70px 0 0;
       position: relative;
-      z-index: 3; /* Lebih tinggi dari bola lampu */
+      z-index: 3; 
       transition: all 0.5s ease;
     }
 
     .lamp-bulb {
       position: absolute;
-      top: 45px; /* Mengintip sedikit dari bawah kap */
+      top: 45px; 
       width: 40px;
       height: 40px;
       background: #ffffff;
@@ -113,11 +113,11 @@
       z-index: 4;
     }
 
-    /* 3. TALI PENARIK YANG DIPERBAIKI */
+    /* 3. TALI PENARIK */
     .pull-string-container {
       position: absolute;
       top: 60px;
-      left: 75%; /* Sedikit digeser agar tidak menabrak tiang lampu */
+      left: 75%; 
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -125,16 +125,16 @@
     }
 
     .pull-string {
-      width: 3px; /* Sedikit ditebalkan */
+      width: 3px; 
       height: 60px; 
       background: #888;
-      transform-origin: top; /* Agar memanjangnya dari atas ke bawah */
+      transform-origin: top; 
     }
 
     .pull-handle {
       width: 22px; 
       height: 22px;
-      background: linear-gradient(135deg, #fcecae, #d4af37); /* Efek 3D pada bola emas */
+      background: linear-gradient(135deg, #fcecae, #d4af37); 
       border-radius: 50%;
       cursor: grab;
       touch-action: none; 
@@ -207,12 +207,11 @@
   <div class="main-container">
     <div class="lamp-wrapper" id="lampWrapper">
       <div class="lamp-shade"></div>
-      <div class="lamp-bulb"></div> <!-- Bola lampu baru yang akan menyala -->
+      <div class="lamp-bulb"></div>
       <div class="lamp-light"></div>
       <div class="lamp-stand"></div>
       <div class="lamp-base"></div>
       
-      <!-- Container tali & bola sudah diperbaiki -->
       <div class="pull-string-container">
         <div class="pull-string" id="pullString"></div>
         <div class="pull-handle" id="pullHandle"></div>
@@ -235,11 +234,14 @@
     const body = document.body;
     const titleText = document.getElementById("titleText");
 
+    // MEMBUAT OBJEK AUDIO (Suara klik sakelar)
+    const clickSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
+
     let isOn = false; 
     let isDragging = false;
     let startY = 0;
-    const maxPull = 60; // Batas tarikan maksimal
-    let hasToggled = false; // Mencegah lampu nyala-mati berulang kali saat ditarik
+    const maxPull = 60; 
+    let hasToggled = false; 
 
     const daftarFakta = [
       "Madu tidak pernah basi. Para arkeolog menemukan pot madu di makam Mesir kuno yang berumur lebih dari 3.000 tahun dan masih bisa dimakan.",
@@ -263,7 +265,7 @@
 
     function dragStart(e) {
       isDragging = true;
-      hasToggled = false; // Reset status saat mulai menarik
+      hasToggled = false; 
       startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
       body.style.cursor = "grabbing"; 
     }
@@ -274,17 +276,14 @@
       let currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
       let tarikJarak = currentY - startY;
 
-      // Batasi agar tidak bisa ditarik tembus ke bawah atau didorong ke atas
       if (tarikJarak < 0) tarikJarak = 0;
       if (tarikJarak > maxPull) tarikJarak = maxPull;
 
-      // Hanya mengubah tinggi tali. Bola otomatis terdorong ke bawah.
       pullString.style.height = `${60 + tarikJarak}px`; 
 
-      // Nyalakan lampu persis ketika tali ditarik cukup dalam (mirip sakelar mekanik)
       if (tarikJarak > (maxPull * 0.75) && !hasToggled) {
         toggleLight();
-        hasToggled = true; // Kunci agar tidak tereksekusi berkali-kali
+        hasToggled = true; 
       }
     }
 
@@ -293,11 +292,14 @@
       isDragging = false;
       body.style.cursor = "default";
 
-      // Animasi kembalinya tali dibuat sangat liquid/membal
       gsap.to(pullString, { height: 60, duration: 1.2, ease: "elastic.out(1, 0.2)" });
     }
 
     function toggleLight() {
+      // MEMAINKAN SUARA KLIK SAAT LAMPU BERUBAH STATUS
+      clickSound.currentTime = 0; // Mengulang suara dari awal agar bisa diklik cepat
+      clickSound.play();
+
       isOn = !isOn; 
 
       if (isOn) {
@@ -316,7 +318,7 @@
         
         body.style.backgroundColor = "#0f1115";
         bgGlow.style.opacity = "0";
-        titleText.style.color = "#aaa"; // Redupkan judul saat lampu mati
+        titleText.style.color = "#aaa"; 
       }
     }
   </script>
