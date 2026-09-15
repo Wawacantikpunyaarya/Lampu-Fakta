@@ -51,20 +51,18 @@
       pointer-events: none; transition: opacity 0.6s ease; z-index: 4;
     }
 
-    /* TALI PENARIK - Rotasi dari poros atas */
+    /* TALI PENARIK */
     .pull-string-container {
       position: absolute; top: 60px; left: 75%; display: flex;
       flex-direction: column; align-items: center; z-index: 5;
     }
     .pull-string {
-      width: 3px; height: 60px; background: #888;
-      transform-origin: top center; /* Penting: Agar tali berayun dari engsel atas */
+      width: 3px; height: 60px; background: #888; transform-origin: top center;
     }
     .pull-handle {
       width: 22px; height: 22px; background: linear-gradient(135deg, #fcecae, #d4af37); 
       border-radius: 50%; cursor: grab; touch-action: none; 
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      transform: translateY(-5px); /* Menyesuaikan agar bola menempel dengan tali */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3); transform: translateY(-5px);
     }
     .pull-handle:active { cursor: grabbing; }
 
@@ -75,15 +73,14 @@
       border-radius: 20px; width: 260px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
       text-align: center; opacity: 0; transform: translateY(30px);
       pointer-events: none; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative; /* Agar wadah dekorasi mengikutinya */
+      position: relative;
     }
     .fact-box h2 { color: #ffd700; margin-top: 0; margin-bottom: 20px; font-weight: 500; }
     .fact-box p { color: white; font-size: 16px; line-height: 1.6; margin: 0; }
 
-    /* WADAH DEKORASI TEMATIK YANG MELAYANG */
+    /* DEKORASI TEMATIK */
     .decor-container {
-      position: absolute; top: 50%; left: 50%;
-      width: 0; height: 0; z-index: -1; overflow: visible;
+      position: absolute; top: 50%; left: 50%; width: 0; height: 0; z-index: -1; overflow: visible;
     }
     .floating-decor {
       position: absolute; font-size: 32px; opacity: 0;
@@ -119,14 +116,12 @@
       
       <div class="pull-string-container">
         <div class="pull-string" id="pullString">
-          <!-- Bola disatukan di DALAM tali agar selalu menempel walau tali berputar -->
           <div class="pull-handle" id="pullHandle" style="position: absolute; bottom: -10px; left: -9px;"></div>
         </div>
       </div>
     </div>
 
     <div class="fact-box" id="factBox">
-      <!-- Container untuk ikon melayang di belakang kotak fakta -->
       <div class="decor-container" id="decorContainer"></div>
       <h2>Tahukah Kamu?</h2>
       <p id="factText">Tarik tali untuk melihat fakta!</p>
@@ -148,7 +143,7 @@
 
     let isOn = false; 
     let isDragging = false;
-    let startX = 0, startY = 0; // Butuh kordinat X untuk menghitung serong
+    let startX = 0, startY = 0; 
     const maxPull = 60; 
     let hasToggled = false; 
 
@@ -192,10 +187,8 @@
       let deltaX = currentX - startX;
       let deltaY = currentY - startY;
 
-      // KUNCI UTAMA 1: Tidak bisa ditarik ke atas
       if (deltaY < 0) deltaY = 0; 
 
-      // KUNCI UTAMA 2: Phytagoras untuk mengukur jarak tarikan asli (kemiringan)
       let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
       
       if (distance > maxPull) {
@@ -205,10 +198,7 @@
         distance = maxPull;
       }
 
-      // KUNCI UTAMA 3: Menghitung sudut derajat ayunan tali menggunakan atan2
       let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
-
-      // Gunakan GSAP untuk menerapkan panjang dan rotasi seketika
       gsap.set(pullString, { height: 60 + distance, rotation: -angle });
 
       if (distance > (maxPull * 0.75) && !hasToggled) {
@@ -221,45 +211,93 @@
       if (!isDragging) return;
       isDragging = false;
       body.style.cursor = "default";
-      // Saat dilepas, kembalikan tinggi dan rotasi ke 0 dengan efek membal
       gsap.to(pullString, { height: 60, rotation: 0, duration: 1.2, ease: "elastic.out(1, 0.2)" });
     }
 
-    // FUNGSI MEMUNCULKAN DEKORASI TEMATIK
     function spawnDecorations(text) {
-      decorContainer.innerHTML = ""; // Bersihkan ikon sebelumnya
+      decorContainer.innerHTML = ""; 
       
-      let icons = ["✨", "💡", "🌟", "💫"]; // Default ikon menyala
+      let icons = ["✨", "💡", "🌟", "💫"]; // Emotikon default jika kata kunci tidak ada
       let lowerText = text.toLowerCase();
 
-      // Filter Kata Kunci (Bisa kamu tambah sebanyak-banyaknya)
-      if (lowerText.includes("bunga") || lowerText.includes("matahari")) icons = ["🌻", "☀️", "🐝"];
-      else if (lowerText.includes("madu")) icons = ["🐝", "🍯", "🏺"];
-      else if (lowerText.includes("siput")) icons = ["🐌", "🍃", "💤"];
-      else if (lowerText.includes("gurita")) icons = ["🐙", "🌊", "🦑"];
-      else if (lowerText.includes("pisang") || lowerText.includes("stroberi")) icons = ["🍌", "🍓"];
-      else if (lowerText.includes("bumi") || lowerText.includes("nuklir")) icons = ["🌍", "☢️", "☄️"];
+      // ==========================================
+      // KAMUS KATA KUNCI & EMOTIKON SUPER LENGKAP
+      // ==========================================
+      const kamusEmotikon = [
+        // Hewan
+        { words: ["kucing", "meong", "anak bulu"], icons: ["🐱", "🐈", "🐾", "🧶"] },
+        { words: ["anjing", "guk"], icons: ["🐶", "🐕", "🦴", "🐾"] },
+        { words: ["burung", "terbang", "elang"], icons: ["🐦", "🦅", "🕊️", "🪶"] },
+        { words: ["gurita", "laut", "samudra", "pantai", "hiu", "paus", "ikan"], icons: ["🌊", "🐙", "🦈", "🐳", "🐟", "🐚", "🏝️"] },
+        { words: ["kutu", "serangga", "semut", "nyamuk", "laba-laba"], icons: ["🐜", "🐞", "🦠", "🕷️", "🕸️"] },
+        { words: ["ular", "berbisa", "reptil", "buaya"], icons: ["🐍", "🐊", "⚠️"] },
+        { words: ["dinosaurus", "purba", "fosil", "t-rex"], icons: ["🦖", "🦕", "🦴", "🌋"] },
+        { words: ["kuda", "sapi", "susu", "kambing"], icons: ["🐴", "🐄", "🥛", "🧀"] },
+        
+        // Alam & Luar Angkasa
+        { words: ["luar angkasa", "bintang", "planet", "galaksi", "astronot", "meteor"], icons: ["🌌", "⭐", "🪐", "🛸", "🚀", "🛰️"] },
+        { words: ["bumi", "nuklir", "radiasi"], icons: ["🌍", "☢️", "☄️"] },
+        { words: ["hujan", "petir", "badai", "awan", "cuaca", "air"], icons: ["🌧️", "⚡", "🌩️", "☁️", "💧"] },
+        { words: ["es", "salju", "dingin", "beku"], icons: ["❄️", "⛄", "🧊", "🏔️"] },
+        { words: ["api", "panas", "terbakar", "gunung"], icons: ["🔥", "🌋", "🥵", "⛰️"] },
+        { words: ["pohon", "hutan", "kayu", "daun", "tanaman"], icons: ["🌳", "🌲", "🌿", "🪵", "🌱"] },
+        { words: ["bunga", "matahari"], icons: ["🌻", "☀️", "🐝"] },
 
-      // Meledakkan 6 ikon menyebar dari belakang kotak
+        // Makanan & Minuman
+        { words: ["pisang", "stroberi", "apel", "jeruk", "buah", "semangka"], icons: ["🍌", "🍓", "🍎", "🍊", "🍉", "🍇"] },
+        { words: ["kopi", "kafein"], icons: ["☕", "🤎", "🥱"] },
+        { words: ["cokelat", "manis", "gula", "permen", "madu"], icons: ["🍫", "🍩", "🍬", "🍭", "🍯"] },
+        { words: ["mochi", "tahu", "wajan", "masak", "nasi", "telur"], icons: ["🍡", "🥟", "🍳", "🍽️", "🤤", "🍚"] },
+
+        // Tubuh & Manusia
+        { words: ["tidur", "mimpi", "kasur", "ngantuk", "siput"], icons: ["💤", "🛌", "🌙", "😴", "🐌"] },
+        { words: ["otak", "pikiran", "cerdas", "pintar"], icons: ["🧠", "💡", "💭", "🎓"] },
+        { words: ["jantung", "darah", "tubuh", "sel"], icons: ["🫀", "❤️", "🩸", "🧬"] },
+        { words: ["tulang", "tengkorak", "kerangka"], icons: ["🦴", "💀", "🏴‍☠️"] },
+        
+        // Hobi, Ilmu, & Hiburan
+        { words: ["buku", "membaca", "perpustakaan", "sejarah"], icons: ["📚", "📖", "🤓", "📜"] },
+        { words: ["musik", "lagu", "nyanyi", "suara", "piano", "gitar"], icons: ["🎵", "🎶", "🎸", "🎹", "🎧"] },
+        { words: ["waktu", "jam", "tahun", "bulan", "hari"], icons: ["⏳", "⏰", "📅", "📆"] },
+        { words: ["mesir", "piramida", "mumi", "gurun"], icons: ["🐪", "🏜️", "🛕", "☀️"] },
+        { words: ["uang", "kaya", "emas", "berlian", "keuangan"], icons: ["💰", "💵", "🪙", "💎", "💸"] },
+        { words: ["hantu", "seram", "takut", "misteri", "kutukan"], icons: ["👻", "🦇", "🎃", "😱", "🧿"] },
+        { words: ["bioskop", "film", "tiket", "kamera"], icons: ["🎬", "🍿", "🎟️", "🎥"] },
+
+        // Komputer, Game, & Pop-Culture
+        { words: ["komputer", "teknologi", "internet", "kode", "ai", "robot", "python"], icons: ["💻", "🌐", "🤖", "⌨️", "🔌"] },
+        { words: ["excel", "spreadsheet", "data", "angka", "rumus", "macro"], icons: ["📊", "📈", "📉", "🖥️"] },
+        { words: ["alien", "jam tangan", "omnitrix"], icons: ["⌚", "👽", "🟢", "☄️"] },
+        { words: ["game", "minecraft", "kubus", "bermain", "dunia"], icons: ["🎮", "🟩", "⛏️", "🕹️"] },
+        { words: ["sihir", "anime", "jujutsu", "teknik"], icons: ["🔮", "💥", "🤞", "✨"] }
+      ];
+
+      // Sistem pencari: Akan memindai teks, jika ada kata yang cocok dengan kamus di atas,
+      // maka array "icons" akan ditimpa dengan emotikon yang sesuai.
+      for (let i = 0; i < kamusEmotikon.length; i++) {
+        if (kamusEmotikon[i].words.some(word => lowerText.includes(word))) {
+          icons = kamusEmotikon[i].icons;
+          break; // Berhenti mencari setelah menemukan kecocokan pertama
+        }
+      }
+
+      // Animasi meledakkan 6 ikon menyebar dari belakang kotak
       for (let i = 0; i < 6; i++) {
         let el = document.createElement("div");
         el.className = "floating-decor";
         el.innerText = icons[Math.floor(Math.random() * icons.length)];
         decorContainer.appendChild(el);
 
-        // Menentukan arah lemparan melingkar acak (radius 100px - 160px)
         let throwAngle = (i / 6) * Math.PI * 2 + (Math.random() * 0.5);
         let throwDistance = 100 + Math.random() * 60; 
         let targetX = Math.cos(throwAngle) * throwDistance;
         let targetY = Math.sin(throwAngle) * throwDistance;
 
-        // Animasi meledak keluar
         gsap.fromTo(el, 
           { x: 0, y: 0, opacity: 0, scale: 0 },
           { x: targetX, y: targetY, opacity: 0.8, scale: 1 + Math.random(), duration: 1, ease: "back.out(1.5)" }
         );
 
-        // Animasi melayang/goyang terus-menerus di tempat tujuan
         gsap.to(el, {
           y: targetY - 25,
           rotation: (Math.random() - 0.5) * 40,
@@ -281,7 +319,6 @@
         const faktaAcak = daftarFakta[Math.floor(Math.random() * daftarFakta.length)];
         factText.textContent = faktaAcak; 
         
-        // Panggil fungsi dekorasi berdasarkan teks yang muncul
         spawnDecorations(faktaAcak);
 
         factBox.classList.add("active");
@@ -295,7 +332,7 @@
         body.style.backgroundColor = "#0f1115";
         bgGlow.style.opacity = "0";
         titleText.style.color = "#aaa"; 
-        decorContainer.innerHTML = ""; // Bersihkan dekorasi saat mati
+        decorContainer.innerHTML = ""; 
       }
     }
   </script>
