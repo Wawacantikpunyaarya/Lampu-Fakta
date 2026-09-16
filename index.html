@@ -187,6 +187,7 @@
       let deltaX = currentX - startX;
       let deltaY = currentY - startY;
 
+      // Cegah perhitungan jika didorong ke atas
       if (deltaY < 0) deltaY = 0; 
 
       let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -201,7 +202,9 @@
       let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
       gsap.set(pullString, { height: 60 + distance, rotation: -angle });
 
-      if (distance > (maxPull * 0.75) && !hasToggled) {
+      // PERBAIKAN BUG: Lampu HANYA menyala jika tarikan ke BAWAH (deltaY) cukup dalam.
+      // Dulu pakai "distance", sehingga digeser ke samping pun lampu nyala.
+      if (deltaY > (maxPull * 0.70) && !hasToggled) {
         toggleLight();
         hasToggled = true; 
       }
@@ -217,14 +220,10 @@
     function spawnDecorations(text) {
       decorContainer.innerHTML = ""; 
       
-      let icons = ["✨", "💡", "🌟", "💫"]; // Emotikon default jika kata kunci tidak ada
+      let icons = ["✨", "💡", "🌟", "💫"]; 
       let lowerText = text.toLowerCase();
 
-      // ==========================================
-      // KAMUS KATA KUNCI & EMOTIKON SUPER LENGKAP
-      // ==========================================
       const kamusEmotikon = [
-        // Hewan
         { words: ["kucing", "meong", "anak bulu"], icons: ["🐱", "🐈", "🐾", "🧶"] },
         { words: ["anjing", "guk"], icons: ["🐶", "🐕", "🦴", "🐾"] },
         { words: ["burung", "terbang", "elang"], icons: ["🐦", "🦅", "🕊️", "🪶"] },
@@ -234,7 +233,6 @@
         { words: ["dinosaurus", "purba", "fosil", "t-rex"], icons: ["🦖", "🦕", "🦴", "🌋"] },
         { words: ["kuda", "sapi", "susu", "kambing"], icons: ["🐴", "🐄", "🥛", "🧀"] },
         
-        // Alam & Luar Angkasa
         { words: ["luar angkasa", "bintang", "planet", "galaksi", "astronot", "meteor"], icons: ["🌌", "⭐", "🪐", "🛸", "🚀", "🛰️"] },
         { words: ["bumi", "nuklir", "radiasi"], icons: ["🌍", "☢️", "☄️"] },
         { words: ["hujan", "petir", "badai", "awan", "cuaca", "air"], icons: ["🌧️", "⚡", "🌩️", "☁️", "💧"] },
@@ -243,19 +241,16 @@
         { words: ["pohon", "hutan", "kayu", "daun", "tanaman"], icons: ["🌳", "🌲", "🌿", "🪵", "🌱"] },
         { words: ["bunga", "matahari"], icons: ["🌻", "☀️", "🐝"] },
 
-        // Makanan & Minuman
         { words: ["pisang", "stroberi", "apel", "jeruk", "buah", "semangka"], icons: ["🍌", "🍓", "🍎", "🍊", "🍉", "🍇"] },
         { words: ["kopi", "kafein"], icons: ["☕", "🤎", "🥱"] },
         { words: ["cokelat", "manis", "gula", "permen", "madu"], icons: ["🍫", "🍩", "🍬", "🍭", "🍯"] },
         { words: ["mochi", "tahu", "wajan", "masak", "nasi", "telur"], icons: ["🍡", "🥟", "🍳", "🍽️", "🤤", "🍚"] },
 
-        // Tubuh & Manusia
         { words: ["tidur", "mimpi", "kasur", "ngantuk", "siput"], icons: ["💤", "🛌", "🌙", "😴", "🐌"] },
         { words: ["otak", "pikiran", "cerdas", "pintar"], icons: ["🧠", "💡", "💭", "🎓"] },
         { words: ["jantung", "darah", "tubuh", "sel"], icons: ["🫀", "❤️", "🩸", "🧬"] },
         { words: ["tulang", "tengkorak", "kerangka"], icons: ["🦴", "💀", "🏴‍☠️"] },
         
-        // Hobi, Ilmu, & Hiburan
         { words: ["buku", "membaca", "perpustakaan", "sejarah"], icons: ["📚", "📖", "🤓", "📜"] },
         { words: ["musik", "lagu", "nyanyi", "suara", "piano", "gitar"], icons: ["🎵", "🎶", "🎸", "🎹", "🎧"] },
         { words: ["waktu", "jam", "tahun", "bulan", "hari"], icons: ["⏳", "⏰", "📅", "📆"] },
@@ -264,7 +259,6 @@
         { words: ["hantu", "seram", "takut", "misteri", "kutukan"], icons: ["👻", "🦇", "🎃", "😱", "🧿"] },
         { words: ["bioskop", "film", "tiket", "kamera"], icons: ["🎬", "🍿", "🎟️", "🎥"] },
 
-        // Komputer, Game, & Pop-Culture
         { words: ["komputer", "teknologi", "internet", "kode", "ai", "robot", "python"], icons: ["💻", "🌐", "🤖", "⌨️", "🔌"] },
         { words: ["excel", "spreadsheet", "data", "angka", "rumus", "macro"], icons: ["📊", "📈", "📉", "🖥️"] },
         { words: ["alien", "jam tangan", "omnitrix"], icons: ["⌚", "👽", "🟢", "☄️"] },
@@ -272,16 +266,13 @@
         { words: ["sihir", "anime", "jujutsu", "teknik"], icons: ["🔮", "💥", "🤞", "✨"] }
       ];
 
-      // Sistem pencari: Akan memindai teks, jika ada kata yang cocok dengan kamus di atas,
-      // maka array "icons" akan ditimpa dengan emotikon yang sesuai.
       for (let i = 0; i < kamusEmotikon.length; i++) {
         if (kamusEmotikon[i].words.some(word => lowerText.includes(word))) {
           icons = kamusEmotikon[i].icons;
-          break; // Berhenti mencari setelah menemukan kecocokan pertama
+          break; 
         }
       }
 
-      // Animasi meledakkan 6 ikon menyebar dari belakang kotak
       for (let i = 0; i < 6; i++) {
         let el = document.createElement("div");
         el.className = "floating-decor";
