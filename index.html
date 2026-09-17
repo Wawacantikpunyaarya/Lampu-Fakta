@@ -3,47 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tarik Tali Lampu - Fakta Acak</title>
+  <title>Lampu Fakta</title>
   
+  <!-- Tailwind CSS for Layout -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- GSAP for Animations -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --bg-body: #0f1115;
+      --bg-glow-color: rgba(255, 210, 70, 0.25);
+      --text-main: #ffffff;
+      --text-sub: #a1a3a8;
+      --accent-color: #ffd700;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --box-bg: rgba(255, 255, 255, 0.03);
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --icon-color: #ffffff;
+    }
+
+    body.light-mode {
+      --bg-body: #f3f4f6;
+      --bg-glow-color: rgba(255, 210, 70, 0.4);
+      --text-main: #111827;
+      --text-sub: #4b5563;
+      --accent-color: #d97706;
+      --border-color: rgba(0, 0, 0, 0.15);
+      --box-bg: rgba(0, 0, 0, 0.03);
+      --input-bg: rgba(0, 0, 0, 0.04);
+      --icon-color: #374151;
+    }
+
     body {
-      margin: 0; height: 100vh; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; background-color: #0f1115; 
-      font-family: 'Segoe UI', sans-serif; overflow: hidden;
-      user-select: none; transition: background-color 0.8s ease;
+      margin: 0;
+      height: 100vh;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      user-select: none;
+      transition: background-color 0.8s ease, color 0.8s ease;
     }
 
     .bg-glow {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle at 50% 40%, rgba(255, 210, 70, 0.25) 0%, transparent 70%);
-      opacity: 0; z-index: 0; pointer-events: none; transition: opacity 0.8s ease;
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, var(--bg-glow-color) 0%, transparent 70%);
+      opacity: 0; z-index: 0; pointer-events: none; transition: opacity 0.8s ease, background 0.8s ease;
     }
 
-    h1 {
-      color: white; margin-bottom: 50px; font-weight: 400;
-      letter-spacing: 1px; z-index: 1; text-align: center;
-      padding: 0 20px; transition: color 0.6s ease;
+    .corner-text {
+      position: absolute;
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      max-width: 200px;
+      z-index: 10;
+      transition: color 0.8s ease;
     }
+    
+    .accent-line-v {
+      width: 1px;
+      background-color: var(--border-color);
+      height: 40px;
+      margin-right: 12px;
+      transition: background-color 0.8s ease;
+    }
+    
+    .accent-line-h {
+      height: 1px;
+      background-color: var(--border-color);
+      width: 30px;
+      margin-bottom: 12px;
+      transition: background-color 0.8s ease;
+    }
+
+    .search-input {
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      transition: all 0.3s ease;
+    }
+    .search-input::placeholder { color: var(--text-sub); }
+    .search-input:focus { width: 18rem; border-color: var(--accent-color); outline: none; }
+
+    .theme-btn {
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      color: var(--icon-color);
+      transition: all 0.3s ease;
+    }
+    .theme-btn:hover { background-color: var(--border-color); }
 
     .main-container {
-      display: flex; align-items: center; gap: 80px; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      gap: 80px; z-index: 1; width: 100%; max-width: 900px; margin: 0 auto;
     }
 
-    /* LAMPU */
     .lamp-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; }
+    
     .lamp-shade {
       width: 140px; height: 60px; background: #e0e0e0; border-radius: 70px 70px 0 0;
       position: relative; z-index: 3; transition: all 0.5s ease;
     }
+    
     .lamp-bulb {
       position: absolute; top: 45px; width: 40px; height: 40px;
       background: #ffffff; border-radius: 50%; z-index: 2; opacity: 0;
       box-shadow: 0 0 40px #ffdd00, 0 0 80px #ffaa00; transition: opacity 0.6s ease;
     }
+    
     .lamp-stand { width: 12px; height: 120px; background: #cccccc; z-index: 1; }
+    
     .lamp-base { width: 80px; height: 10px; background: #cccccc; border-radius: 5px; z-index: 1; }
+    
     .lamp-light {
       position: absolute; top: 55px; width: 300px; height: 400px;
       background: linear-gradient(to bottom, rgba(255, 235, 120, 0.6) 0%, rgba(255, 220, 80, 0.1) 60%, transparent 100%);
@@ -51,14 +129,15 @@
       pointer-events: none; transition: opacity 0.6s ease; z-index: 4;
     }
 
-    /* TALI PENARIK */
     .pull-string-container {
       position: absolute; top: 60px; left: 75%; display: flex;
       flex-direction: column; align-items: center; z-index: 5;
     }
+    
     .pull-string {
       width: 3px; height: 60px; background: #888; transform-origin: top center;
     }
+    
     .pull-handle {
       width: 22px; height: 22px; background: linear-gradient(135deg, #fcecae, #d4af37); 
       border-radius: 50%; cursor: grab; touch-action: none; 
@@ -66,26 +145,21 @@
     }
     .pull-handle:active { cursor: grabbing; }
 
-    /* KOTAK FAKTA */
     .fact-box {
-      background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px 30px;
-      border-radius: 20px; width: 260px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-      text-align: center; opacity: 0; transform: translateY(30px);
-      pointer-events: none; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
+      background: var(--box-bg);
+      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--border-color);
+      padding: 40px 30px;
+      border-radius: 20px;
+      width: 300px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      opacity: 0;
+      transform: translateY(30px);
+      pointer-events: none;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.8s ease, border-color 0.8s ease;
     }
-    .fact-box h2 { color: #ffd700; margin-top: 0; margin-bottom: 20px; font-weight: 500; }
-    .fact-box p { color: white; font-size: 16px; line-height: 1.6; margin: 0; }
-
-    /* DEKORASI TEMATIK */
-    .decor-container {
-      position: absolute; top: 50%; left: 50%; width: 0; height: 0; z-index: -1; overflow: visible;
-    }
-    .floating-decor {
-      position: absolute; font-size: 32px; opacity: 0;
-      transform: translate(-50%, -50%); pointer-events: none;
-    }
+    .fact-box h2 { color: var(--accent-color); margin-top: 0; margin-bottom: 15px; font-weight: 500; transition: color 0.8s ease; }
+    .fact-box p { color: var(--text-main); font-size: 15px; line-height: 1.6; margin: 0; transition: color 0.8s ease; }
 
     /* KELAS AKTIF */
     .lamp-wrapper.on .lamp-light, .lamp-wrapper.on .lamp-bulb { opacity: 1; }
@@ -94,39 +168,86 @@
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
-      h1 { font-size: 22px; margin-bottom: 30px; }
-      .main-container { flex-direction: column; gap: 40px; }
-      .fact-box { width: 85%; max-width: 300px; padding: 25px 20px; }
-      .lamp-light { height: 280px; }
+      .main-container { flex-direction: column; gap: 60px; padding-top: 40px; }
+      .fact-box { width: 85%; max-width: 340px; padding: 25px 20px; }
+      .lamp-light { height: 280px; width: 250px; }
     }
   </style>
 </head>
-<body>
+<body class="relative">
 
   <div class="bg-glow" id="bgGlow"></div>
-  <h1 id="titleText">Nyalakan Lampu Untuk Mengetahui Fakta</h1>
+  
+  <header class="fixed top-0 left-0 w-full p-6 lg:px-12 flex justify-between items-center z-50">
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center border" style="background: var(--input-bg); border-color: var(--border-color);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="var(--accent-color)" viewBox="0 0 256 256"><path d="M235.54,103.88a12,12,0,0,0-9.42-7.5l-20.91-3.66L176.8,75a12,12,0,0,0-15.65-4L140,81.42V24a12,12,0,0,0-24,0V81.42l-21.16-10.43a12,12,0,0,0-15.65,4L50.79,92.72,29.88,96.38a12,12,0,0,0-9.42,7.5,12,12,0,0,0,1.91,11.89L39.73,138l-17.36,22.25a12,12,0,0,0-1.91,11.89,12,12,0,0,0,9.42,7.5l20.91,3.66L79.2,201a12,12,0,0,0,15.65,4L116,194.58V232a12,12,0,0,0,24,0V194.58l21.16,10.43a12,12,0,0,0,15.65-4l28.41-17.68,20.91-3.66a12,12,0,0,0,9.42-7.5,12,12,0,0,0-1.91-11.89L216.27,138l17.36-22.25A12,12,0,0,0,235.54,103.88Z" opacity="0.2"></path><path d="M128,12A100.11,100.11,0,0,0,28,112v8a100.11,100.11,0,0,0,76,97.4V232a8,8,0,0,0,16,0V217.4A100.11,100.11,0,0,0,228,120v-8A100.11,100.11,0,0,0,128,12Zm84,100a84.1,84.1,0,0,1-63.88,81.56A8,8,0,0,0,140,201.38V216H116V201.38a8,8,0,0,0-8.12-7.82A84.1,84.1,0,0,1,44,112,84.09,84.09,0,0,1,128,28,84.09,84.09,0,0,1,212,112Z"></path></svg>
+      </div>
+      <h1 class="text-xl font-medium tracking-wide">Lampu <span style="color: var(--accent-color)">Fakta</span></h1>
+    </div>
 
-  <div class="main-container">
-    <div class="lamp-wrapper" id="lampWrapper">
-      <div class="lamp-shade"></div>
-      <div class="lamp-bulb"></div>
-      <div class="lamp-light"></div>
-      <div class="lamp-stand"></div>
-      <div class="lamp-base"></div>
-      
-      <div class="pull-string-container">
-        <div class="pull-string" id="pullString">
-          <div class="pull-handle" id="pullHandle" style="position: absolute; bottom: -10px; left: -9px;"></div>
+    <!-- Search & Theme Toggle -->
+    <div class="flex items-center gap-3">
+      <div class="relative hidden sm:block">
+        <input type="text" id="searchInput" placeholder="Cari fakta..." class="search-input rounded-full py-2 px-4 pl-10 text-sm w-56">
+        <svg class="absolute left-3.5 top-2.5 w-4 h-4" style="color: var(--text-sub);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <button id="themeToggleBtn" class="theme-btn w-10 h-10 rounded-full flex items-center justify-center cursor-pointer">
+        <!-- Default Moon Icon -->
+        <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="corner-text hidden md:flex items-start top-32 left-12">
+    <div class="accent-line-v mt-1"></div>
+    <p>Sedikit fakta,<br>bisa membuat hari<br>lebih berwarna.</p>
+  </div>
+  <div class="corner-text hidden md:block text-right top-32 right-12">
+    <p>"Rasa ingin tahu<br>membuat dunia tetap menarik."</p>
+    <p class="mt-2" style="color: var(--text-sub); opacity: 0.7;">— Anonim</p>
+  </div>
+  <div class="corner-text hidden md:block bottom-12 left-12">
+    <div class="accent-line-h"></div>
+    <p>Fakta kecil,<br>dampak besar.</p>
+  </div>
+  <div class="corner-text hidden md:block bottom-12 right-12 text-left">
+    <div class="accent-line-h"></div>
+    <p>Teruslah ingin tahu,<br>karena selalu ada hal baru<br>yang menunggu.</p>
+  </div>
+
+  <main class="w-full h-full flex flex-col items-center justify-center relative z-10 pt-16">
+    <div class="text-center mb-12 px-4 transition-colors duration-800">
+      <h2 id="titleText" class="text-3xl md:text-4xl font-medium mb-3 tracking-wide">Nyalakan Lampu Untuk Mengetahui Fakta</h2>
+      <p id="subtitleText" class="text-sm md:text-base" style="color: var(--text-sub);">Dunia penuh dengan hal menarik yang kadang kita lewatkan.</p>
+    </div>
+
+    <div class="main-container">
+      <div class="lamp-wrapper" id="lampWrapper">
+        <div class="lamp-shade"></div>
+        <div class="lamp-bulb"></div>
+        <div class="lamp-light"></div>
+        <div class="lamp-stand"></div>
+        <div class="lamp-base"></div>
+        
+        <div class="pull-string-container">
+          <div class="pull-string" id="pullString">
+            <div class="pull-handle" id="pullHandle" style="position: absolute; bottom: -10px; left: -9px;"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="fact-box" id="factBox">
-      <div class="decor-container" id="decorContainer"></div>
-      <h2>Tahukah Kamu?</h2>
-      <p id="factText">Tarik tali untuk melihat fakta!</p>
+      <div class="fact-box" id="factBox">
+        <h2>Tahukah Kamu?</h2>
+        <p id="factText">Tarik tali untuk melihat fakta!</p>
+      </div>
     </div>
-  </div>
+  </main>
 
   <script>
     const handle = document.getElementById("pullHandle");
@@ -136,8 +257,10 @@
     const lampWrapper = document.getElementById("lampWrapper");
     const bgGlow = document.getElementById("bgGlow");
     const body = document.body;
-    const titleText = document.getElementById("titleText");
-    const decorContainer = document.getElementById("decorContainer");
+
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const themeIcon = document.getElementById("themeIcon");
+    const searchInput = document.getElementById("searchInput");
 
     const clickSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
 
@@ -147,21 +270,70 @@
     const maxPull = 60; 
     let hasToggled = false; 
 
-    // 1. Ubah daftarFakta menjadi array kosong atau teks loading
-    let daftarFakta = ["Sedang mengambil fakta dari satelit... Tarik lagi sebentar ya!"];
+    // Initial placeholder array
+    let daftarFakta = [
+      "Siput bisa tidur selama tiga tahun tanpa henti.",
+      "Madu tidak pernah basi. Arkeolog menemukan madu berusia ribuan tahun di makam Mesir kuno.",
+      "Jantung udang terletak di kepalanya.",
+      "Gajah adalah satu-satunya mamalia yang tidak bisa melompat."
+    ];
 
-    // 2. Ganti URL di bawah ini dengan URL Web App dari langkah ke-2
     const urlDatabase = "https://script.google.com/macros/s/AKfycbw8dL6QoG0X_ZAZtlnbs6DptV1Z5lbIkZBvFffz3-d3K4YYEvEGRdfamhpvicPwqWL7/exec";
 
-    // 3. Mengambil data dari Google Sheets
     fetch(urlDatabase)
       .then(response => response.json())
       .then(data => {
-        if (data.length > 0) {
-          daftarFakta = data; // Mengganti teks loading dengan 100 fakta dari spreadsheet
+        if (data && data.length > 0) {
+          daftarFakta = data; 
         }
       })
-      .catch(error => console.error("Gagal mengambil data:", error));
+      .catch(error => console.error("Gagal mengambil data, menggunakan fakta default.", error));
+
+
+    searchInput.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        const query = this.value.trim().toLowerCase();
+        if (!query) return;
+
+        const results = daftarFakta.filter(f => f.toLowerCase().includes(query));
+        let displayResult = "";
+
+        if (results.length > 0) {
+          displayResult = results[Math.floor(Math.random() * results.length)];
+        } else {
+          displayResult = `Fakta tentang '${query}' tidak ditemukan. Coba kata kunci lain!`;
+        }
+
+        // Force turn on the light to show the result
+        if (!isOn) {
+          isOn = true;
+          lampWrapper.classList.add("on");
+          bgGlow.style.opacity = "1";
+          
+          clickSound.currentTime = 0;
+          clickSound.play().catch(e => console.log('Audio error:', e));
+        }
+
+        factText.textContent = displayResult;
+        factBox.classList.add("active");
+      }
+    });
+
+    themeToggleBtn.addEventListener("click", () => {
+      // Rotate Animation using GSAP
+      gsap.to(themeToggleBtn, { rotation: "+=360", duration: 0.5, ease: "power2.out" });
+      
+      body.classList.toggle("light-mode");
+      
+      // Toggle SVG Icon between Moon and Sun
+      if (body.classList.contains("light-mode")) {
+        // Sun Icon
+        themeIcon.innerHTML = `<path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.28a1 1 0 011.415 0l.708.708a1 1 0 01-1.414 1.414l-.708-.708a1 1 0 010-1.414zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zm-2.28 4.22a1 1 0 010 1.415l-.708.708a1 1 0 01-1.414-1.414l.708-.708a1 1 0 011.415 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22-2.28a1 1 0 01-1.415 0l-.708-.708a1 1 0 011.414-1.414l.708.708a1 1 0 010 1.414zM4 10a1 1 0 01-1 1H2a1 1 0 110-2h1a1 1 0 011 1zm2.28-4.22a1 1 0 010-1.415l.708-.708a1 1 0 011.414 1.414l-.708.708a1 1 0 01-1.415 0zM10 5a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd" />`;
+      } else {
+        // Moon Icon
+        themeIcon.innerHTML = `<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />`;
+      }
+    });
 
     handle.addEventListener("mousedown", dragStart);
     handle.addEventListener("touchstart", dragStart, { passive: false });
@@ -187,7 +359,6 @@
       let deltaX = currentX - startX;
       let deltaY = currentY - startY;
 
-      // Cegah perhitungan jika didorong ke atas
       if (deltaY < 0) deltaY = 0; 
 
       let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -202,8 +373,6 @@
       let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
       gsap.set(pullString, { height: 60 + distance, rotation: -angle });
 
-      // PERBAIKAN BUG: Lampu HANYA menyala jika tarikan ke BAWAH (deltaY) cukup dalam.
-      // Dulu pakai "distance", sehingga digeser ke samping pun lampu nyala.
       if (deltaY > (maxPull * 0.70) && !hasToggled) {
         toggleLight();
         hasToggled = true; 
@@ -217,113 +386,23 @@
       gsap.to(pullString, { height: 60, rotation: 0, duration: 1.2, ease: "elastic.out(1, 0.2)" });
     }
 
-    function spawnDecorations(text) {
-      decorContainer.innerHTML = ""; 
-      
-      let icons = ["✨", "💡", "🌟", "💫"]; 
-      let lowerText = text.toLowerCase();
-
-      const kamusEmotikon = [
-        { words: ["kucing", "meong", "anak bulu"], icons: ["🐱", "🐈", "🐾", "🧶"] },
-        { words: ["anjing", "guk"], icons: ["🐶", "🐕", "🦴", "🐾"] },
-        { words: ["burung", "terbang", "elang"], icons: ["🐦", "🦅", "🕊️", "🪶"] },
-        { words: ["gurita", "laut", "samudra", "pantai", "hiu", "paus", "ikan"], icons: ["🌊", "🐙", "🦈", "🐳", "🐟", "🐚", "🏝️"] },
-        { words: ["kutu", "serangga", "semut", "nyamuk", "laba-laba"], icons: ["🐜", "🐞", "🦠", "🕷️", "🕸️"] },
-        { words: ["ular", "berbisa", "reptil", "buaya"], icons: ["🐍", "🐊", "⚠️"] },
-        { words: ["dinosaurus", "purba", "fosil", "t-rex"], icons: ["🦖", "🦕", "🦴", "🌋"] },
-        { words: ["kuda", "sapi", "susu", "kambing"], icons: ["🐴", "🐄", "🥛", "🧀"] },
-        
-        { words: ["luar angkasa", "bintang", "planet", "galaksi", "astronot", "meteor"], icons: ["🌌", "⭐", "🪐", "🛸", "🚀", "🛰️"] },
-        { words: ["bumi", "nuklir", "radiasi"], icons: ["🌍", "☢️", "☄️"] },
-        { words: ["hujan", "petir", "badai", "awan", "cuaca", "air"], icons: ["🌧️", "⚡", "🌩️", "☁️", "💧"] },
-        { words: ["es", "salju", "dingin", "beku"], icons: ["❄️", "⛄", "🧊", "🏔️"] },
-        { words: ["api", "panas", "terbakar", "gunung"], icons: ["🔥", "🌋", "🥵", "⛰️"] },
-        { words: ["pohon", "hutan", "kayu", "daun", "tanaman"], icons: ["🌳", "🌲", "🌿", "🪵", "🌱"] },
-        { words: ["bunga", "matahari"], icons: ["🌻", "☀️", "🐝"] },
-
-        { words: ["pisang", "stroberi", "apel", "jeruk", "buah", "semangka"], icons: ["🍌", "🍓", "🍎", "🍊", "🍉", "🍇"] },
-        { words: ["kopi", "kafein"], icons: ["☕", "🤎", "🥱"] },
-        { words: ["cokelat", "manis", "gula", "permen", "madu"], icons: ["🍫", "🍩", "🍬", "🍭", "🍯"] },
-        { words: ["mochi", "tahu", "wajan", "masak", "nasi", "telur"], icons: ["🍡", "🥟", "🍳", "🍽️", "🤤", "🍚"] },
-
-        { words: ["tidur", "mimpi", "kasur", "ngantuk", "siput"], icons: ["💤", "🛌", "🌙", "😴", "🐌"] },
-        { words: ["otak", "pikiran", "cerdas", "pintar"], icons: ["🧠", "💡", "💭", "🎓"] },
-        { words: ["jantung", "darah", "tubuh", "sel"], icons: ["🫀", "❤️", "🩸", "🧬"] },
-        { words: ["tulang", "tengkorak", "kerangka"], icons: ["🦴", "💀", "🏴‍☠️"] },
-        
-        { words: ["buku", "membaca", "perpustakaan", "sejarah"], icons: ["📚", "📖", "🤓", "📜"] },
-        { words: ["musik", "lagu", "nyanyi", "suara", "piano", "gitar"], icons: ["🎵", "🎶", "🎸", "🎹", "🎧"] },
-        { words: ["waktu", "jam", "tahun", "bulan", "hari"], icons: ["⏳", "⏰", "📅", "📆"] },
-        { words: ["mesir", "piramida", "mumi", "gurun"], icons: ["🐪", "🏜️", "🛕", "☀️"] },
-        { words: ["uang", "kaya", "emas", "berlian", "keuangan"], icons: ["💰", "💵", "🪙", "💎", "💸"] },
-        { words: ["hantu", "seram", "takut", "misteri", "kutukan"], icons: ["👻", "🦇", "🎃", "😱", "🧿"] },
-        { words: ["bioskop", "film", "tiket", "kamera"], icons: ["🎬", "🍿", "🎟️", "🎥"] },
-
-        { words: ["komputer", "teknologi", "internet", "kode", "ai", "robot", "python"], icons: ["💻", "🌐", "🤖", "⌨️", "🔌"] },
-        { words: ["excel", "spreadsheet", "data", "angka", "rumus", "macro"], icons: ["📊", "📈", "📉", "🖥️"] },
-        { words: ["alien", "jam tangan", "omnitrix"], icons: ["⌚", "👽", "🟢", "☄️"] },
-        { words: ["game", "minecraft", "kubus", "bermain", "dunia"], icons: ["🎮", "🟩", "⛏️", "🕹️"] },
-        { words: ["sihir", "anime", "jujutsu", "teknik"], icons: ["🔮", "💥", "🤞", "✨"] }
-      ];
-
-      for (let i = 0; i < kamusEmotikon.length; i++) {
-        if (kamusEmotikon[i].words.some(word => lowerText.includes(word))) {
-          icons = kamusEmotikon[i].icons;
-          break; 
-        }
-      }
-
-      for (let i = 0; i < 6; i++) {
-        let el = document.createElement("div");
-        el.className = "floating-decor";
-        el.innerText = icons[Math.floor(Math.random() * icons.length)];
-        decorContainer.appendChild(el);
-
-        let throwAngle = (i / 6) * Math.PI * 2 + (Math.random() * 0.5);
-        let throwDistance = 100 + Math.random() * 60; 
-        let targetX = Math.cos(throwAngle) * throwDistance;
-        let targetY = Math.sin(throwAngle) * throwDistance;
-
-        gsap.fromTo(el, 
-          { x: 0, y: 0, opacity: 0, scale: 0 },
-          { x: targetX, y: targetY, opacity: 0.8, scale: 1 + Math.random(), duration: 1, ease: "back.out(1.5)" }
-        );
-
-        gsap.to(el, {
-          y: targetY - 25,
-          rotation: (Math.random() - 0.5) * 40,
-          duration: 2 + Math.random(),
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: 1
-        });
-      }
-    }
-
     function toggleLight() {
       clickSound.currentTime = 0; 
-      clickSound.play();
+      clickSound.play().catch(e => console.log('Audio playback prevented by browser'));
+      
       isOn = !isOn; 
 
       if (isOn) {
         const faktaAcak = daftarFakta[Math.floor(Math.random() * daftarFakta.length)];
         factText.textContent = faktaAcak; 
-        
-        spawnDecorations(faktaAcak);
 
         factBox.classList.add("active");
         lampWrapper.classList.add("on"); 
-        body.style.backgroundColor = "#1a1d24";
         bgGlow.style.opacity = "1";
-        titleText.style.color = "#fff";
       } else {
         factBox.classList.remove("active");
         lampWrapper.classList.remove("on"); 
-        body.style.backgroundColor = "#0f1115";
         bgGlow.style.opacity = "0";
-        titleText.style.color = "#aaa"; 
-        decorContainer.innerHTML = ""; 
       }
     }
   </script>
