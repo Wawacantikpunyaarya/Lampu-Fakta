@@ -109,13 +109,14 @@
     
     .lamp-shade {
       width: 140px; height: 60px; background: #e0e0e0; border-radius: 70px 70px 0 0;
-      position: relative; z-index: 3; transition: all 0.5s ease;
+      position: relative; z-index: 4; transition: all 0.5s ease;
     }
     
     .lamp-bulb {
       position: absolute; top: 45px; width: 40px; height: 40px;
-      background: #ffffff; border-radius: 50%; z-index: 2; opacity: 0;
+      background: #ffffff; border-radius: 50%; z-index: 3; opacity: 0;
       box-shadow: 0 0 40px #ffdd00, 0 0 80px #ffaa00; transition: opacity 0.6s ease;
+      cursor: pointer;
     }
     
     .lamp-stand { width: 12px; height: 120px; background: #cccccc; z-index: 1; }
@@ -123,10 +124,10 @@
     .lamp-base { width: 80px; height: 10px; background: #cccccc; border-radius: 5px; z-index: 1; }
     
     .lamp-light {
-      position: absolute; top: 55px; width: 300px; height: 400px;
+      position: absolute; top: 60px; width: 300px; height: 400px;
       background: linear-gradient(to bottom, rgba(255, 235, 120, 0.6) 0%, rgba(255, 220, 80, 0.1) 60%, transparent 100%);
       clip-path: polygon(35% 0, 65% 0, 100% 100%, 0 100%); opacity: 0;
-      pointer-events: none; transition: opacity 0.6s ease; z-index: 4;
+      pointer-events: none; transition: opacity 0.6s ease; z-index: 2;
     }
 
     .pull-string-container {
@@ -257,6 +258,7 @@
     const lampWrapper = document.getElementById("lampWrapper");
     const bgGlow = document.getElementById("bgGlow");
     const body = document.body;
+    const lampBulb = document.querySelector(".lamp-bulb");
 
     const themeToggleBtn = document.getElementById("themeToggleBtn");
     const themeIcon = document.getElementById("themeIcon");
@@ -341,6 +343,9 @@
     window.addEventListener("touchmove", drag, { passive: false });
     window.addEventListener("mouseup", dragEnd);
     window.addEventListener("touchend", dragEnd);
+    
+    // Klik bohlam untuk menyalakan/mematikan lampu
+    lampBulb.addEventListener("click", toggleLight);
 
     function dragStart(e) {
       isDragging = true;
